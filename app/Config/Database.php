@@ -9,21 +9,9 @@ use CodeIgniter\Database\Config;
  */
 class Database extends Config
 {
-    /**
-     * The directory that holds the Migrations and Seeds directories.
-     */
     public string $filesPath = APPPATH . 'Database' . DIRECTORY_SEPARATOR;
-
-    /**
-     * Lets you choose which connection group to use if no other is specified.
-     */
     public string $defaultGroup = 'default';
 
-    /**
-     * The default database connection.
-     *
-     * @var array<string, mixed>
-     */
     public array $default = [
         'DSN'          => '',
         'hostname'     => '127.0.0.1',
@@ -52,11 +40,6 @@ class Database extends Config
         ],
     ];
 
-    /**
-     * This database connection is used when running PHPUnit database tests.
-     *
-     * @var array<string, mixed>
-     */
     public array $tests = [
         'DSN'          => '',
         'hostname'     => '127.0.0.1',
@@ -89,12 +72,13 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Safely pull database credentials from environment variables set in Render
+        // Read environment variables directly
         $this->default['hostname'] = env('database.default.hostname', $this->default['hostname']);
         $this->default['username'] = env('database.default.username', $this->default['username']);
         $this->default['password'] = env('database.default.password', $this->default['password']);
         $this->default['database'] = env('database.default.database', $this->default['database']);
         $this->default['port']     = (int) env('database.default.port', $this->default['port']);
+        $this->default['DBDriver'] = env('database.default.DBDriver', $this->default['DBDriver']);
 
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
