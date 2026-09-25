@@ -1,36 +1,30 @@
 FROM php:8.2-apache
 
-# Install required system packages and PHP extensions
+# Install system dependencies and PHP extensions needed for MySQLi
 RUN apt-get update && apt-get install -y \
     libicu-dev \
+    libonig-dev \
     libzip-dev \
-    zip \
     unzip \
     git \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install intl pdo pdo_mysql mysqli zip
+    && docker-php-ext-install mysqli pdo_mysql intl mbstring zip
 
-# Install Composer inside the Docker container
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Enable Apache mod_rewrite for CodeIgniter routing
+# Enable Apache Rewrite Module
 RUN a2enmod rewrite
-
-# Copy application files to Apache web root
-COPY . /var/www/html/
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Run Composer to install dependencies (including vendor/codeigniter4)
-RUN composer install --no-dev --optimize-autoloader
+# Copy project files into container
+COPY myproject/ /var/www/html/
 
-# Update Apache document root to point to public/
+# Update Apache document root to point to CodeIgniter's public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/conf-available/*.conf
+RUN sed -ri -s 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Set directory permissions for CodeIgniter
-RUN chown -R www-data:www-data /var/www/html/writable
+# Give proper permissions to writable directory
+RUN chmod -R 777 /var/www/html/writable
 
+# Expose port 80
 EXPOSE 80
