@@ -14,6 +14,7 @@ echo "database.default.username = ${DB_USER}" >> .env
 echo "database.default.password = ${DB_PASSWORD}" >> .env
 echo "database.default.port     = ${DB_PORT}" >> .env
 echo "database.default.DBDriver = MySQLi" >> .env
+echo "database.default.encrypt = true" >> .env
 
 # Ensure writable directories have correct permissions
 chmod -R 777 writable
