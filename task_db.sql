@@ -1,3 +1,4 @@
+SET SESSION sql_require_primary_key = OFF;
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
