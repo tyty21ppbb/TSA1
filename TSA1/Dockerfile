@@ -15,15 +15,15 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy your CodeIgniter project files into the container web root
-COPY myproject/ /var/www/html/
+# Copy all project files directly from the root build context into container
+COPY . /var/www/html/
 
 # Update Apache document root to point to CodeIgniter's public folder
-ENV APACHE_DOCUMENT_SOURCE /var/www/html/public
-RUN sed -ri -s 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -s 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -s 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -s 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Give proper permissions to CodeIgniter's writable directory
+# Give proper permissions to writable directory
 RUN chmod -R 777 /var/www/html/writable
 
 # Expose port 80
