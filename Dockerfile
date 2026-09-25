@@ -1,17 +1,26 @@
 FROM php:8.1-apache
 
-# Install MySQL extensions
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+# Install required PHP extensions for MySQL and CodeIgniter
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl pdo pdo_mysql mysqli zip
 
-# Enable Apache mod_rewrite
+# Enable Apache mod_rewrite for CodeIgniter routing
 RUN a2enmod rewrite
 
-# Copy project files
+# Copy application files to Apache root
 COPY . /var/www/html/
 
-# Set web root to public folder
+# Update Apache document root to point to public/
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/conf-available/*.conf
+
+# Set permissions for CodeIgniter writable folder
+RUN chown -R www-data:www-data /var/www/html/writable
 
 EXPOSE 80
