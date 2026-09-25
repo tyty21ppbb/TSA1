@@ -9,26 +9,26 @@ class Database extends Config
     public string $filesPath = APPPATH . 'Database' . DIRECTORY_SEPARATOR;
     public string $defaultGroup = 'default';
 
-    public $default = [
-        'DSN'      => '',
-        'hostname' => 'mysql-tsa1-db-tsa1-task-management-system-1.g.aivencloud.com',
-        'username' => 'avnadmin',
-        'password' => '', // <-- Leave this blank so it uses environment variables safely!
-        'database' => 'defaultdb',
-        'DBDriver' => 'MySQLi',
-        'DBPrefix' => '',
-        'pConnect' => false,
-        'DBDebug'  => true,
-        'charset'  => 'utf8mb4',
-        'DBCollat' => 'utf8mb4_general_ci',
-        'swapPre'  => '',
-        'encrypt'  => true,  // SSL enabled for Aiven
-        'compress' => false,
-        'strictOn' => false,
-        'failover' => [],
-        'port'     => 10441,
-    ];
-    
+   public $default = [
+    'DSN'      => '',
+    'hostname' => 'mysql-tsa1-db-tsa1-task-management-system-1.g.aivencloud.com',
+    'username' => 'avnadmin',
+    'password' => '', // Left blank here; CodeIgniter automatically loads it securely from your .env file
+    'database' => 'defaultdb',
+    'DBDriver' => 'MySQLi',
+    'DBPrefix' => '',
+    'pConnect' => false,
+    'DBDebug'  => true,
+    'charset'  => 'utf8mb4',
+    'DBCollat' => 'utf8mb4_general_ci',
+    'swapPre'  => '',
+    'encrypt'  => true,  // Required for Aiven SSL connection
+    'compress' => false,
+    'strictOn' => false,
+    'failover' => [],
+    'port'     => 10441,
+];
+
     public array $tests = [
         'DSN'         => '',
         'hostname'    => '127.0.0.1',
