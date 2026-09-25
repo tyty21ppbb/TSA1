@@ -5,16 +5,15 @@ set -o errexit
 # Install composer dependencies
 composer install --no-dev --optimize-autoloader
 
-# Generate .env file for CodeIgniter from Render Environment Variables
-cat <<EOF > .env
-CI_ENVIRONMENT = ${CI_ENVIRONMENT:-development}
+# Dynamically generate the .env file on Render using server environment variables
+echo "CI_ENVIRONMENT = production" > .env
+echo "app.baseURL = 'https://task-for-today.onrender.com/'" >> .env
+echo "database.default.hostname = ${DB_HOST}" >> .env
+echo "database.default.database = ${DB_NAME}" >> .env
+echo "database.default.username = ${DB_USER}" >> .env
+echo "database.default.password = ${DB_PASSWORD}" >> .env
+echo "database.default.port     = ${DB_PORT}" >> .env
+echo "database.default.DBDriver = MySQLi" >> .env
 
-database.default.hostname = ${database_default_hostname:-${database.default.hostname}}
-database.default.database = ${database_default_database:-${database.default.database}}
-database.default.username = ${database_default_username:-${database.default.username}}
-database.default.password = ${database_default_password:-${database.default.password}}
-database.default.port = ${database_default_port:-${database.default.port}}
-database.default.DBDriver = ${database_default_DBDriver:-${database.default.DBDriver}}
-EOF
-
-echo ".env file successfully created for CodeIgniter deployment."
+# Ensure writable directories have correct permissions
+chmod -R 777 writable
