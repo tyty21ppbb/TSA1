@@ -72,6 +72,26 @@ class Database extends Config
     {
         parent::__construct();
 
+        // Direct lookup from Docker/Render environment variables
+        if ($host = getenv('database.default.hostname')) {
+            $this->default['hostname'] = $host;
+        }
+        if ($user = getenv('database.default.username')) {
+            $this->default['username'] = $user;
+        }
+        if ($pass = getenv('database.default.password')) {
+            $this->default['password'] = $pass;
+        }
+        if ($db = getenv('database.default.database')) {
+            $this->default['database'] = $db;
+        }
+        if ($port = getenv('database.default.port')) {
+            $this->default['port'] = (int) $port;
+        }
+        if ($driver = getenv('database.default.DBDriver')) {
+            $this->default['DBDriver'] = $driver;
+        }
+
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
