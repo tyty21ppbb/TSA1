@@ -13,7 +13,7 @@ class Database extends Config
         'DSN'      => '',
         'hostname' => 'mysql-tsa1-db-tsa1-task-management-system-1.g.aivencloud.com',
         'username' => 'avnadmin',
-        'password' => '', // Populated dynamically from environment variables below
+        'password' => '', // <-- Leave this blank so it uses environment variables safely!
         'database' => 'defaultdb',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
@@ -22,13 +22,13 @@ class Database extends Config
         'charset'  => 'utf8mb4',
         'DBCollat' => 'utf8mb4_general_ci',
         'swapPre'  => '',
-        'encrypt'  => true,
+        'encrypt'  => true,  // SSL enabled for Aiven
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
         'port'     => 10441,
     ];
-
+    
     public array $tests = [
         'DSN'         => '',
         'hostname'    => '127.0.0.1',

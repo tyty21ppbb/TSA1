@@ -2,10 +2,10 @@
 # Exit on error
 set -o errexit
 
-# Install composer dependencies
+# Install composer dependencies for production
 composer install --no-dev --optimize-autoloader
 
-# Dynamically generate the .env file on Render using server environment variables
+# Dynamically generate the production .env file using Render Environment Variables
 echo "CI_ENVIRONMENT = production" > .env
 echo "app.baseURL = 'https://task-for-today.onrender.com/'" >> .env
 echo "database.default.hostname = ${DB_HOST}" >> .env
