@@ -6,31 +6,19 @@ use CodeIgniter\Database\Config;
 
 class Database extends Config
 {
-    /**
-     * The directory that holds the Migrations
-     * and Seeds directories.
-     */
     public string $filesPath = APPPATH . 'Database' . DIRECTORY_SEPARATOR;
-
-    /**
-     * Lets you choose which connection group to use if no
-     * other one is specified.
-     */
     public string $defaultGroup = 'default';
 
-    /**
-     * The default database connection.
-     */
     public $default = [
         'DSN'      => '',
-        'hostname' => '', 
-        'username' => 'avnadmin',                  
-        'password' => '', // Leave blank; it will be injected safely via Render Environment Variables
-        'database' => 'defaultdb',                 
+        'hostname' => 'mysql-tsa1-db-tsa1-task-management-system-1.g.aivencloud.com',
+        'username' => 'avnadmin',
+        'password' => '', // Populated dynamically from environment variables below
+        'database' => 'defaultdb',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
-        'DBDebug'  => (ENVIRONMENT !== 'development'),
+        'DBDebug'  => true,
         'charset'  => 'utf8mb4',
         'DBCollat' => 'utf8mb4_general_ci',
         'swapPre'  => '',
@@ -38,12 +26,9 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 10441,                     
+        'port'     => 10441,
     ];
 
-    /**
-     * This database connection is used when running PHPUnit database tests.
-     */
     public array $tests = [
         'DSN'         => '',
         'hostname'    => '127.0.0.1',
@@ -70,21 +55,10 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Override settings dynamically from Render Environment Variables
-        if (getenv('database.default.hostname')) {
-            $this->default['hostname'] = getenv('database.default.hostname');
-        }
-        if (getenv('database.default.database')) {
-            $this->default['database'] = getenv('database.default.database');
-        }
-        if (getenv('database.default.username')) {
-            $this->default['username'] = getenv('database.default.username');
-        }
-        if (getenv('database.default.password')) {
-            $this->default['password'] = getenv('database.default.password');
-        }
-        if (getenv('database.default.port')) {
-            $this->default['port'] = (int) getenv('database.default.port');
+        // Safely pull the password from Render environment variables
+        $pass = getenv('DB_PASSWORD') ?: getenv('database.default.password');
+        if ($pass) {
+            $this->default['password'] = $pass;
         }
     }
 }
