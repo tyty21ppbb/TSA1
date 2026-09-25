@@ -72,13 +72,29 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Read environment variables directly
-        $this->default['hostname'] = env('database.default.hostname', $this->default['hostname']);
-        $this->default['username'] = env('database.default.username', $this->default['username']);
-        $this->default['password'] = env('database.default.password', $this->default['password']);
-        $this->default['database'] = env('database.default.database', $this->default['database']);
-        $this->default['port']     = (int) env('database.default.port', $this->default['port']);
-        $this->default['DBDriver'] = env('database.default.DBDriver', $this->default['DBDriver']);
+        // Helper closure to look up values across env(), $_ENV, or getenv()
+        $getEnvVal = function ($key) {
+            return env($key) ?: ($_ENV[$key] ?? getenv($key) ?: null);
+        };
+
+        if ($host = $getEnvVal('database.default.hostname')) {
+            $this->default['hostname'] = $host;
+        }
+        if ($user = $getEnvVal('database.default.username')) {
+            $this->default['username'] = $user;
+        }
+        if ($pass = $getEnvVal('database.default.password')) {
+            $this->default['password'] = $pass;
+        }
+        if ($db = $getEnvVal('database.default.database')) {
+            $this->default['database'] = $db;
+        }
+        if ($port = $getEnvVal('database.default.port')) {
+            $this->default['port'] = (int) $port;
+        }
+        if ($driver = $getEnvVal('database.default.DBDriver')) {
+            $this->default['DBDriver'] = $driver;
+        }
 
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
