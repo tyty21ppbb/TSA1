@@ -15,8 +15,8 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy project files into container
-COPY myproject/ /var/www/html/
+# Copy all project files directly from root context into container
+COPY . /var/www/html/
 
 # Update Apache document root to point to CodeIgniter's public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
