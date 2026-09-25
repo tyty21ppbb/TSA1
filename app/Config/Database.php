@@ -72,30 +72,6 @@ class Database extends Config
     {
         parent::__construct();
 
-        // Helper closure to look up values across env(), $_ENV, or getenv()
-        $getEnvVal = function ($key) {
-            return env($key) ?: ($_ENV[$key] ?? getenv($key) ?: null);
-        };
-
-        if ($host = $getEnvVal('database.default.hostname')) {
-            $this->default['hostname'] = $host;
-        }
-        if ($user = $getEnvVal('database.default.username')) {
-            $this->default['username'] = $user;
-        }
-        if ($pass = $getEnvVal('database.default.password')) {
-            $this->default['password'] = $pass;
-        }
-        if ($db = $getEnvVal('database.default.database')) {
-            $this->default['database'] = $db;
-        }
-        if ($port = $getEnvVal('database.default.port')) {
-            $this->default['port'] = (int) $port;
-        }
-        if ($driver = $getEnvVal('database.default.DBDriver')) {
-            $this->default['DBDriver'] = $driver;
-        }
-
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
