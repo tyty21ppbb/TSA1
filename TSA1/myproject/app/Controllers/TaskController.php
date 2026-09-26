@@ -6,72 +6,78 @@ use App\Models\TaskModel;
 
 class TaskController extends BaseController
 {
-    protected TaskModel $taskModel;
+   public function index()
+{
+    $model = new TaskModel();
+    $data['tasks'] = $model->findAll(); 
+    
+    return view('templates/header', $data) 
+         . view('tasks', $data) 
+         . view('templates/footer');
+}
 
-    public function __construct()
-    {
-        $this->taskModel = new TaskModel();
-    }
+public function allTasks()
+{
+    $model = new TaskModel();
+    $data['tasks'] = $model->findAll();
 
-    // Today's Tasks (Home Page)
-    public function index()
-    {
-        $today = date('Y-m-d');
-        $data['tasks'] = $this->taskModel->where('task_date', $today)->findAll();
-        $data['title'] = "Today's Tasks";
-
-        return view('templates/header', $data)
-             . view('welcome', $data)
-             . view('templates/footer');
-    }
-
-    // All Tasks Page
-    public function allTasks()
-    {
-        $data['tasks'] = $this->taskModel->orderBy('task_date', 'DESC')->findAll();
-        $data['title'] = "All Tasks";
-
-        return view('templates/header', $data)
-             . view('tasks', $data)
-             . view('templates/footer');
-    }
-
-    // Add New Task Action
+    return view('templates/header', $data) 
+         . view('tasks', $data) 
+         . view('templates/footer');
+}
     public function add()
     {
-        $title = $this->request->getPost('title');
+        $model = new TaskModel();
         
-        if (!empty($title)) {
-            $this->taskModel->save([
-                'title'     => $title,
-                'status'    => 'pending',
-                'task_date' => date('Y-m-d')
-            ]);
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'title'     => 'required|min_length[3]',
+            'task_date' => 'required'
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        return redirect()->to('/');
+        $model->save([
+            'title'     => $this->request->getPost('title'),
+            'task_date' => $this->request->getPost('task_date'),
+            'status'    => 0 // Default incomplete status
+        ]);
+
+        return redirect()->to('/tasks')->with('message', 'Task successfully added.');
     }
 
-    // Toggle Task Status (pending <-> completed)
-    public function toggleStatus(int|string $id)
+    public function toggleStatus($id = null)
     {
-        $task = $this->taskModel->find($id);
+        $model = new TaskModel();
+        $task = $model->find($id);
 
         if ($task) {
-            $newStatus = ($task['status'] === 'completed') ? 'pending' : 'completed';
-            $this->taskModel->update($id, ['status' => $newStatus]);
+            // Toggle status between 0 and 1 (or active/completed)
+            $newStatus = $task['status'] == 1 ? 0 : 1;
+            $model->update($id, ['status' => $newStatus]);
         }
 
         return redirect()->back();
     }
 
-    // About Page
-    public function about()
+    public function delete($id = null)
     {
-        $data['title'] = "About Project";
-
-        return view('templates/header', $data)
-             . view('about', $data)
-             . view('templates/footer');
+        $model = new TaskModel();
+        
+        // Permanently delete the task from the database
+        if ($model->find($id)) {
+            $model->delete($id);
+        }
+        
+        return redirect()->to('/tasks')->with('message', 'Task permanently deleted.');
     }
+
+   public function about()
+{
+    return view('templates/header') 
+         . view('about') 
+         . view('templates/footer');
+}
 }

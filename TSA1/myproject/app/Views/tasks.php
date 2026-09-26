@@ -50,27 +50,36 @@
                         </thead>
                         <tbody>
                             <?php foreach ($tasks as $task): ?>
-                                <tr class="border-bottom border-secondary border-opacity-25">
-                                    <td class="text-secondary small">#<?= esc($task['id']) ?></td>
-                                    <td>
-                                        <span class="<?= $task['status'] === 'completed' ? 'text-decoration-line-through text-secondary' : 'text-white fw-semibold' ?>">
-                                            <?= esc($task['title']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-secondary small"><?= esc($task['task_date'] ?? date('Y-m-d')) ?></td>
-                                    <td>
-                                        <?php if ($task['status'] === 'completed'): ?>
-                                            <span class="badge bg-success bg-opacity-20 text-success border border-success px-2 py-1">Completed</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-warning bg-opacity-20 text-warning border border-warning px-2 py-1">Pending</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="<?= base_url('tasks/toggle/' . $task['id']) ?>" class="btn btn-sm btn-outline-info">
-                                            Toggle Status
-                                        </a>
-                                    </td>
-                                </tr>
+                               <tr class="border-bottom border-secondary border-opacity-25">
+    <td class="text-secondary small">#<?= esc($task['id']) ?></td>
+    <td>
+        <span class="<?= ($task['status'] == 1 || $task['status'] === 'completed') ? 'text-decoration-line-through text-secondary' : 'text-white fw-semibold' ?>">
+            <?= esc($task['title']) ?>
+        </span>
+    </td>
+    <td class="text-secondary small"><?= esc($task['task_date'] ?? date('Y-m-d')) ?></td>
+    <td>
+        <?php if ($task['status'] == 1 || $task['status'] === 'completed'): ?>
+            <span class="badge bg-success bg-opacity-20 text-success border border-success px-2 py-1">
+                <i class="fa-solid fa-check me-1"></i> Completed
+            </span>
+        <?php else: ?>
+            <span class="badge bg-warning bg-opacity-20 text-warning border border-warning px-2 py-1">
+                Pending
+            </span>
+        <?php endif; ?>
+    </td>
+    <td class="text-end">
+        <a href="<?= base_url('tasks/toggle/' . $task['id']) ?>" class="btn btn-sm btn-outline-info me-1">
+            Toggle Status
+        </a>
+        <a href="<?= base_url('tasks/delete/' . $task['id']) ?>" 
+           class="btn btn-sm btn-outline-danger" 
+           onclick="return confirm('Are you sure you want to permanently delete this task?');">
+            Delete
+        </a>
+    </td>
+</tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>

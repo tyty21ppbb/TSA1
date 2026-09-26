@@ -15,6 +15,7 @@ $routes->get('tasks', 'TaskController::allTasks');
 // Task actions
 $routes->post('tasks/add', 'TaskController::add');
 $routes->get('tasks/toggle/(:num)', 'TaskController::toggleStatus/$1');
+$routes->get('tasks/delete/(:num)', 'TaskController::delete/$1'); // Added delete route
 
 // Profile & About pages
 $routes->get('profile', 'UserController::profile');
