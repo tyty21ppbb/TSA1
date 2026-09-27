@@ -6,25 +6,26 @@ use App\Models\TaskModel;
 
 class TaskController extends BaseController
 {
-   public function index()
-{
-    $model = new TaskModel();
-    $data['tasks'] = $model->findAll(); 
-    
-    return view('templates/header', $data) 
-         . view('tasks', $data) 
-         . view('templates/footer');
-}
+    public function index()
+    {
+        $model = new TaskModel();
+        $data['tasks'] = $model->findAll(); 
+        
+        return view('templates/header', $data) 
+             . view('tasks', $data) 
+             . view('templates/footer');
+    }
 
-public function allTasks()
-{
-    $model = new TaskModel();
-    $data['tasks'] = $model->findAll();
+    public function allTasks()
+    {
+        $model = new TaskModel();
+        $data['tasks'] = $model->findAll();
 
-    return view('templates/header', $data) 
-         . view('tasks', $data) 
-         . view('templates/footer');
-}
+        return view('templates/header', $data) 
+             . view('tasks', $data) 
+             . view('templates/footer');
+    }
+
     public function add()
     {
         $model = new TaskModel();
@@ -54,7 +55,6 @@ public function allTasks()
         $task = $model->find($id);
 
         if ($task) {
-            // Toggle status between 0 and 1 (or active/completed)
             $newStatus = $task['status'] == 1 ? 0 : 1;
             $model->update($id, ['status' => $newStatus]);
         }
@@ -66,7 +66,6 @@ public function allTasks()
     {
         $model = new TaskModel();
         
-        // Permanently delete the task from the database
         if ($model->find($id)) {
             $model->delete($id);
         }
@@ -74,10 +73,10 @@ public function allTasks()
         return redirect()->to('/tasks')->with('message', 'Task permanently deleted.');
     }
 
-   public function about()
-{
-    return view('templates/header') 
-         . view('about') 
-         . view('templates/footer');
-}
+    public function about()
+    {
+        return view('templates/header') 
+             . view('about') 
+             . view('templates/footer');
+    }
 }

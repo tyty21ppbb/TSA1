@@ -1,14 +1,14 @@
-SET SESSION sql_require_primary_key = OFF;
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 25, 2026 at 03:25 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: sql311.infinityfree.com
+-- Generation Time: Sep 27, 2026 at 01:59 AM
+-- Server version: 11.4.13-MariaDB
+-- PHP Version: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `task_db`
+-- Database: `if0_43011229_taskmanager`
 --
 
 -- --------------------------------------------------------
@@ -51,6 +51,20 @@ CREATE TABLE `tasks` (
   `task_date` date NOT NULL,
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `title`, `status`, `task_date`, `created_at`) VALUES
+(10, 'Gym', '1', '2026-09-27', '0000-00-00 00:00:00'),
+(11, 'Trip to Vietnam', '0', '2026-09-30', '0000-00-00 00:00:00'),
+(13, 'Trip to Thailand', '0', '2026-09-26', '0000-00-00 00:00:00'),
+(15, 'Hellmerry Concert', '0', '2026-11-28', '0000-00-00 00:00:00'),
+(16, 'Car Show in Marikina', '0', '2026-10-04', '0000-00-00 00:00:00'),
+(17, 'Cisco (CCST) Certification', '0', '2026-10-07', '0000-00-00 00:00:00'),
+(18, 'Cleaning the House', '0', '2026-09-27', '0000-00-00 00:00:00'),
+(19, 'Interview the client in capstone', '0', '2026-10-02', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -110,7 +124,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`
