@@ -28,8 +28,13 @@ class CreateTasksAndUsers extends Migration
             'task_date' => [
                 'type' => 'DATE',
             ],
+            'is_archived' => [
+                'type'    => 'BOOLEAN',
+                'default' => false,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
         $this->forge->addKey('id', true);
@@ -56,8 +61,13 @@ class CreateTasksAndUsers extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '100',
             ],
+            'password' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
+                'null' => true,
             ],
         ]);
         $this->forge->addKey('id', true);

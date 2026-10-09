@@ -5,18 +5,26 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-
-// Home page: Today's Tasks
 $routes->get('/', 'TaskController::index');
-
-// All Tasks page
-$routes->get('tasks', 'TaskController::allTasks');
-
-// Task actions
-$routes->post('tasks/add', 'TaskController::add');
-$routes->get('tasks/toggle/(:num)', 'TaskController::toggleStatus/$1');
-$routes->get('tasks/delete/(:num)', 'TaskController::delete/$1'); // Permanent delete route
-
-// Profile & About pages
-$routes->get('profile', 'UserController::profile');
+$routes->get('profile', 'TaskController::profile');
 $routes->get('about', 'TaskController::about');
+$routes->get('welcome', 'TaskController::welcome');
+
+// Authentication Routes
+$routes->get('login', 'AuthController::login');
+$routes->post('login', 'AuthController::attemptLogin');
+$routes->get('register', 'AuthController::register');
+$routes->post('register', 'AuthController::storeRegister');
+$routes->get('logout', 'AuthController::logout');
+
+// Public Task List View
+$routes->get('tasks', 'TaskController::index');
+
+// Protected Task CRUD Routes (Requires Login)
+$routes->group('tasks', ['filter' => 'auth'], function($routes) {
+    $routes->get('new', 'TaskController::new');
+    $routes->post('create', 'TaskController::create');
+    $routes->get('edit/(:num)', 'TaskController::edit/$1');
+    $routes->post('update/(:num)', 'TaskController::update/$1');
+    $routes->get('delete/(:num)', 'TaskController::delete/$1'); // Soft delete (is_archived = 1)
+});

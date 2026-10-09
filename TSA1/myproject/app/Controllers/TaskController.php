@@ -3,80 +3,68 @@
 namespace App\Controllers;
 
 use App\Models\TaskModel;
+use App\Models\UserModel;
 
 class TaskController extends BaseController
 {
     public function index()
     {
-        $model = new TaskModel();
-        $data['tasks'] = $model->findAll(); 
-        
-        return view('templates/header', $data) 
-             . view('tasks', $data) 
-             . view('templates/footer');
-    }
-
-    public function allTasks()
-    {
-        $model = new TaskModel();
-        $data['tasks'] = $model->findAll();
-
-        return view('templates/header', $data) 
-             . view('tasks', $data) 
-             . view('templates/footer');
-    }
-
-    public function add()
-    {
-        $model = new TaskModel();
-        
-        $validation = \Config\Services::validation();
-        $validation->setRules([
-            'title'     => 'required|min_length[3]',
-            'task_date' => 'required'
-        ]);
-
-        if (!$validation->withRequest($this->request)->run()) {
-            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Please log in to access tasks.');
         }
 
-        $model->save([
-            'title'     => $this->request->getPost('title'),
-            'task_date' => $this->request->getPost('task_date'),
-            'status'    => 0 // Default incomplete status
-        ]);
+        $taskModel = new TaskModel();
+        
+        // Fetch all tasks ordered by task_date
+        $data['tasks'] = $taskModel->orderBy('task_date', 'ASC')->findAll();
 
-        return redirect()->to('/tasks')->with('message', 'Task successfully added.');
+        return view('tasks/index', $data);
     }
 
-    public function toggleStatus($id = null)
+    public function profile()
     {
-        $model = new TaskModel();
-        $task = $model->find($id);
-
-        if ($task) {
-            $newStatus = $task['status'] == 1 ? 0 : 1;
-            $model->update($id, ['status' => $newStatus]);
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Please log in to view your profile.');
         }
 
-        return redirect()->back();
-    }
+        $userModel = new UserModel();
+        $userId = session()->get('id');
+        $data['user'] = $userModel->find($userId);
 
-    public function delete($id = null)
-    {
-        $model = new TaskModel();
-        
-        if ($model->find($id)) {
-            $model->delete($id);
-        }
-        
-        return redirect()->to('/tasks')->with('message', 'Task permanently deleted.');
+        return view('profile', $data);
     }
 
     public function about()
     {
-        return view('templates/header') 
-             . view('about') 
-             . view('templates/footer');
+        return view('about');
+    }
+
+    public function store()
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+
+        $taskModel = new TaskModel();
+
+        $taskModel->save([
+            'title'     => $this->request->getPost('title'),
+            'status'    => '0', // Default to pending
+            'task_date' => $this->request->getPost('task_date'),
+        ]);
+
+        return redirect()->to('/tasks')->with('success', 'Task added successfully.');
+    }
+
+    public function delete(int $id)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+
+        $taskModel = new TaskModel();
+        $taskModel->delete($id);
+
+        return redirect()->to('/tasks')->with('success', 'Task deleted successfully.');
     }
 }
